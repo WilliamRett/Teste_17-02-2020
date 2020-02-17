@@ -21,6 +21,8 @@ PS: O projeto está bem simples, porém lembre-se que você está sendo avaliado
 
 Para A Execução do Projeto :
 
-1-> rode o Comando composer install (caso ja tenha o php instalado na maquina)
-2-> rode o Comando php artisan migrate:fresh --seed
+1-> rode o Comando composer install (caso ja tenha o php instalado na maquina),
+
+2-> rode o Comando php artisan migrate:fresh --seed,
+
 3-> rode o Comando php artisan serve 
