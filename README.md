@@ -17,3 +17,10 @@ O objetivo é que o avaliador possa ler o arquivo README e seguindo os passos fa
 Detalhes: Para recuperar os dados do endereço, você deverá usar uma API pública que recupere os dados através do CEP. (​https://viacep.com.br​) - Faça isso em Javascript. 
  
 PS: O projeto está bem simples, porém lembre-se que você está sendo avaliado pelos seus conhecimentos técnicos. 
+
+
+Para A Execução do Projeto :
+
+1-> rode o Comando composer install (caso ja tenha o php instalado na maquina)
+2-> rode o Comando php artisan migrate:fresh --seed
+3-> rode o Comando php artisan serve 
