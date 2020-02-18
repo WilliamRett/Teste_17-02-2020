@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-Route::resource('user', 'UserController');
+Route::get('/ ', function () {return view('index');});
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('cadastro', 'CadastroController');

@@ -15,6 +15,8 @@ class CreatePhonesTable extends Migration
     {
         Schema::create('phones', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('phone_number');
+            $table->unsignedBigInteger('cadastro_id')->foreign()->references('id')->on('cadastros');
             $table->timestamps();
         });
     }

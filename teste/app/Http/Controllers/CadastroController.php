@@ -16,7 +16,8 @@ class CadastroController extends Controller
      */
     public function index()
     {
-        return Cadastro::get();
+        $cadastros = Cadastro::all();
+        return view('cadastro.index')->with(['cadastros'=>$cadastros]);
     }
 
     /**
@@ -26,7 +27,7 @@ class CadastroController extends Controller
      */
     public function create()
     {
-        //
+        return view('cadastro.teste');
     }
 
     /**

@@ -15,6 +15,10 @@ class CreateCadastrosTable extends Migration
     {
         Schema::create('cadastros', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('last_name');
+            $table->string('email');
+            $table->date('date_birth');
             $table->timestamps();
         });
     }
