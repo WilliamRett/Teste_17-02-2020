@@ -4,19 +4,29 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
+     {{-- <script type="text/javascript">
+        $(document).ready(function(){
+           if (jQuery) {  
+             // jQuery is loaded  
+             alert("Yeah!");
+           } else {
+             // jQuery is not loaded
+             alert("Doesn't Work");
+           }
+        });
+      </script>  --}}
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -50,6 +60,12 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('home') }}">{{ __('Dashboard') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('cadastro/create') }}">{{ __('Cadastro') }}</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -79,3 +95,69 @@
     </div>
 </body>
 </html>
+<script>
+   
+$(document).ready(function(){
+    alert('teste');    
+    var count = 1;   
+    dynamic_field(count);
+   
+    function dynamic_field(number)
+    {
+     html = '<tr>';
+           html += '<td><input type="text" name="phone_number[]" class="form-control" maxlength="15"/></td>';
+           if(number > 1)
+           {
+               html += '<td><button type="button" name="remove" id="" class="btn btn-danger remove">Remove</button></td></tr>';
+               $('#tbody').append(html);
+           }
+           else
+           {   
+               html += '<td><button type="button" name="add" id="add" class="btn btn-success">Add</button></td></tr>';
+               $('#tbody').html(html);
+           }
+    }
+   
+    $(document).on('click', '#add', function(){
+     count++;
+     dynamic_field(count);
+    });
+   
+    $(document).on('click', '.remove', function(){
+     count--;
+     $(this).closest("tr").remove();
+    });
+   
+    $('#phone_form').on('submit', function(event){
+           event.preventDefault();
+           $.ajax({
+               url:'{{ route("cadastro.insert") }}',
+               method:'post',
+               data:$(this).serialize(),
+               dataType:'json',
+               beforeSend:function(){
+                   $('#save').attr('disabled','disabled');
+               },
+               success:function(data)
+               {
+                   if(data.error)
+                   {
+                       var error_html = '';
+                       for(var count = 0; count < data.error.length; count++)
+                       {
+                           error_html += '<p>'+data.error[count]+'</p>';
+                       }
+                       $('#result').html('<div class="alert alert-danger">'+error_html+'</div>');
+                   }
+                   else
+                   {
+                       dynamic_field(1);
+                       $('#result').html('<div class="alert alert-success">'+data.success+'</div>');
+                   }
+                   $('#save').attr('disabled', false);
+               }
+           })
+    });
+   
+   });  
+</script>

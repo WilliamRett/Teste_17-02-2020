@@ -44,7 +44,7 @@ class CadastroController extends Controller
             'email'                    => 'required|email'  ,
             'date_birth'               => 'required|date'   ,
             'phone'                    => 'required|array'  ,
-            'phone.*.number'             => 'required|string' ,
+            'phone.*.phone_number'     => 'required|string' ,
             'address'                  => 'required|array  ',
             'address.zipcode'          => 'required|string' ,
             'address.*.address'        => 'required|string' ,
@@ -123,6 +123,36 @@ class CadastroController extends Controller
             'address.*.complement'     => 'nullable|string' ,
             'address.*.number_address' => 'required|string' ,
         ]);
+    }
+
+
+    public function insert(Request $request){
+        if ($request->ajax()) 
+        {
+            $rule =array(
+                'phone_number.*'  =>  'required'
+            );
+            $erro = Validator::make($request->all(),$rules);
+            if ($erro->fails())
+            {
+              return response()->json([
+                  'error' => $error->errors()->all()
+              ]);
+            }
+            $phone  =  $request->phone;
+            for ($count=0; $count < count($phone) ; $count++) { 
+                $date =array(
+                    'phone'  =>  $phone[$count],
+                );
+                $insert_data = $data;
+            }
+
+            Phone::insert($insert_data);
+            return response()->json([
+                'Sucesso'   => 'adicionado com sucesso'
+            ]);
+
+        }
     }
 
     /**
