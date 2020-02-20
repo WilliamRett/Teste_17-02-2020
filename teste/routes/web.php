@@ -15,4 +15,3 @@ Route::get('/ ', function () {return view('welcome');});
 Auth::routes();
 Route::get('/home',function(){return view('home');});
 Route::resource('cadastro', 'CadastroController');
-Route::post('cadastro/insert', 'CadastroController@insert')->name('cadastro.insert');

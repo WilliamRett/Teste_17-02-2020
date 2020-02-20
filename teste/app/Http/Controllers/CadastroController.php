@@ -27,7 +27,7 @@ class CadastroController extends Controller
      */
     public function create()
     {
-        return view('cadastro.teste');
+        return view('cadastro.create');
     }
 
     /**
@@ -43,34 +43,28 @@ class CadastroController extends Controller
             'last_name'                => 'required|string' ,
             'email'                    => 'required|email'  ,
             'date_birth'               => 'required|date'   ,
-            'phone'                    => 'required|array'  ,
-            'phone.*.phone_number'     => 'required|string' ,
-            'address'                  => 'required|array  ',
-            'address.zipcode'          => 'required|string' ,
-            'address.*.address'        => 'required|string' ,
-            'address.*.district'       => 'required|string' ,
-            'address.*.state'          => 'required|string' ,
-            'address.*.city'           => 'required|string' ,
-            'address.*.complement'     => 'nullable|string' ,
-            'address.*.number_address' => 'required|string' ,
+            'phone_number'             => 'required|array'  ,
+            'zipcode'                  => 'required|string' ,
+            'address'                  => 'required|string' ,
+            'district'                 => 'required|string' ,
+            'state'                    => 'required|string' ,
+            'city'                     => 'required|string' ,
+            'complement'               => 'nullable|string' ,
+            'number'                   => 'required|string' ,
         ]);
         $cadastro = new Cadastro();
         $cadastro->fill($validate);
         $cadastro->save();
-        foreach($validate['address'] as $address){
-            $address['cadastro_id'] = $cadastro->id;
-            $addressCount=DB::table('address')->where('cadastro_id',$cadastro->id)->count();
-            if ($addressCount<=6) {
-                //Address::create($address);
-            }
-        }
+        $address = new Address();
+        $address['cadastro_id'] = $cadastro->id;
+        Address::create($address);
         foreach ($validate['phone'] as $phone) {
             $phone['cadastro_id'] = $cadastro->id;
             $phoneCount=DB::table('phones')->where('cadastro_id',$cadastro->id)->count();
             if ($phoneCount<=6) {
                //Phone::create($phone);
             }
-            
+
         }
 
         return $cadastro->load('Phones')->load('Address');
@@ -127,7 +121,7 @@ class CadastroController extends Controller
 
 
     public function insert(Request $request){
-        if ($request->ajax()) 
+        if ($request->ajax())
         {
             $rule =array(
                 'phone_number.*'  =>  'required'
@@ -140,7 +134,7 @@ class CadastroController extends Controller
               ]);
             }
             $phone  =  $request->phone;
-            for ($count=0; $count < count($phone) ; $count++) { 
+            for ($count=0; $count < count($phone) ; $count++) {
                 $date =array(
                     'phone'  =>  $phone[$count],
                 );

@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -88,115 +89,122 @@
             </div>
         </nav>
 
-<main class="py-4">
-<div class="container">
-<div class="table-responsive">
-    <form method="post" id="phone_form">
-     <span id="result"></span>
-     <table class="table table-bordered table-striped" id="user_table">
-   <thead>
-    <tr>
-        <th width="10%" style="text-align:center">Cep</th>
-        <th width="20%" style="text-align:center">Logradouro</th>
-        <th width="10%" style="text-align:center">complemento</th>
-        <th width="15%" style="text-align:center">bairro</th>
-        <th width="15%" style="text-align:center">localidade</th>
-        <th width="10%" style="text-align:center">uf</th>
-        <th width="30%" style="text-align:center">Ação</th>
-    </tr>
-   </thead>
-   <tbody id="tbody">
-
-   </tbody>
-   <tfoot>
-    <tr>
-    <td colspan="6" align="right">&nbsp;</td>
-    <td>
-      @csrf
-      <input type="submit" name="save" id="save" class="btn btn-primary" value="Save" />
-     </td>
-    </tr>
-   </tfoot>
-</table>
-    </form>
-</div>
-</div>
-</main>
-</div>
+        <main class="py-4">
+            @yield('content')
+        </main>
+    </div>
 </body>
 </html>
 <script>
+
 $(document).ready(function(){
-var count = 1;
-dynamic_field(count);
+    var count = 1;
+    dynamic_field(count);
 
-function dynamic_field(number)
-{
-       html = '<tr>';
-       html += '<td><input type="text" name="cep[]" class="form-control" /></td>';
-       html += '<td><input type="text" name="logradouro[]" class="form-control" /></td>';
-       html += '<td><input type="text" name="complemento[]" class="form-control"/></td>';
-       html += '<td><input type="text" name="bairro[]" class="form-control" /></td>';
-       html += '<td><input type="text" name="localidade[]" class="form-control" /></td>';
-       html += '<td><input type="text" name="uf[]" class="form-control" /></td>';
-       if(number > 1)
-       {
-            if (number <= 6) {
-                html += '<td><button type="button" name="remove" id="" class="btn btn-danger remove">Remove</button></td></tr>';
-                $('#tbody').append(html);
-            } else {
-                alert('limite alcançado');
-            }
+    function dynamic_field(number)
+    {
+     html = '<tr>';
+           html += '<td><input type="text" name="phone_number[]" class="form-control"  onkeyup="mascara( this, mtel );" maxlength="15" /></td>';
+           if(number > 1)
+           {
+                if (number <= 6) {
+                    html += '<td><button type="button" name="remove" id="" class="btn btn-danger remove">Remove</button></td></tr>';
+                    $('#tbody').append(html);
+                } else {
+                    alert('limite alcançado');
+                }
 
+           }
+           else
+           {
+               html += '<td><button type="button" name="add" id="add" class="btn btn-success">Add</button></td></tr>';
+               $('#tbody').html(html);
+           }
+    }
+
+    $(document).on('click', '#add', function(){
+     count++;
+     dynamic_field(count);
+    });
+
+    $(document).on('click', '.remove', function(){
+     count--;
+     $(this).closest("tr").remove();
+    });
+
+
+   });
+
+   function buscarCep() {
+    const zipCode = document.querySelector("#zipcode")
+    const address = document.querySelector("#address")
+    const neighborhood = document.querySelector("#neighborhood")
+    const city = document.querySelector("#city")
+    const state = document.querySelector("#state")
+    zipCode.oninput = () => {
+    if (zipCode.value.length === 8) {
+    address.value = ""
+    neighborhood.value = ""
+    city.value = ""
+    state.value = ""
+    fetch(`https://viacep.com.br/ws/${zipCode.value}/json/`)
+    .then(response => response.json())
+    .then(data => {
+    address.value = data.logradouro
+    neighborhood.value = data.bairro
+    city.value = data.localidade
+    state.value = data.uf
+         });
        }
-       else
-       {
-           html += '<td><button type="button" name="add" id="add" class="btn btn-success">Add</button></td></tr>';
-           $('#tbody').html(html);
-       }
+    }
 }
 
-$(document).on('click', '#add', function(){
- count++;
- dynamic_field(count);
-});
+function mascara(o,f){
+    v_obj=o
+    v_fun=f
+    setTimeout("execmascara()",1)
+}
+function execmascara(){
+    v_obj.value=v_fun(v_obj.value)
+}
+function mtel(v){
+    v=v.replace(/\D/g,"");             //Remove tudo o que não é dígito
+    v=v.replace(/^(\d{2})(\d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
+    v=v.replace(/(\d)(\d{4})$/,"$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
+    return v;
+}
 
-$(document).on('click', '.remove', function(){
- count--;
- $(this).closest("tr").remove();
-});
+$('#cadastro').click( function(e) { e.preventDefault()
+​   $.ajax({
+        url: '{{url("cadastro")}}',
+        type: 'POST',
+        data: {
+        'name'         : $('#name').val(),
+        'last_name'    : $('#lastName').val(),
+        'email'        : $('#email').val(),
+        'date_birth'   : $('#date_birth').val(),
+        'zipcode'      : $('#zipCode').val(),
+        'address'      : $('#address').val(),
+        'number'       : $('#number').val(),
+        'complement'   : $('#complement').val(),
+        'neighborhood' : $('#neighborhood').val(),
+        'city'         : $('#city').val(),
+        'state'        : $('#state').val(),
+        'phone_number' : $('#phone_number').val()
+    },
+    dataType: 'json',
+    success: function( response ) {
+    },
+    error: function( response ) {
+            }
+        })
+    })
 
-// $('#phone_form').on('submit', function(event){
-//        event.preventDefault();
-//        $.ajax({
-//            url:'{{ route("cadastro.insert") }}',
-//            method:'post',
-//            data:$(this).serialize(),
-//            dataType:'json',
-//            beforeSend:function(){
-//                $('#save').attr('disabled','disabled');
-//            },
-//            success:function(data)
-//            {
-//                if(data.error)
-//                {
-//                    var error_html = '';
-//                    for(var count = 0; count < data.error.length; count++)
-//                    {
-//                        error_html += '<p>'+data.error[count]+'</p>';
-//                    }
-//                    $('#result').html('<div class="alert alert-danger">'+error_html+'</div>');
-//                }
-//                else
-//                {
-//                    dynamic_field(1);
-//                    $('#result').html('<div class="alert alert-success">'+data.success+'</div>');
-//                }
-//                $('#save').attr('disabled', false);
-//            }
-//        })
-// });
 
-});
+
+
+
 </script>
+
+
 
