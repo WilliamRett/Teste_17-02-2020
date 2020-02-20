@@ -12,6 +12,8 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -99,21 +101,23 @@
 
 $(document).ready(function(){
     var count = 1;
+    var x = 1;
     dynamic_field(count);
 
     function dynamic_field(number)
     {
+
      html = '<tr>';
-           html += '<td><input type="text" name="phone_number[]" class="form-control"  onkeyup="mascara( this, mtel );" maxlength="15" /></td>';
+     html += '<td><input type="text" class="phone" name="phone_number'+x+'" id="phone_number'+x+'" class="form-control"  onkeyup="mascara( this, mtel );" maxlength="15" /></td>';
+     x++;
            if(number > 1)
            {
-                if (number <= 6) {
-                    html += '<td><button type="button" name="remove" id="" class="btn btn-danger remove">Remove</button></td></tr>';
+               if (number <= 6) {
+                    html += '<td><button type="button"  name="remove" id="" class="btn btn-danger remove">Remove</button></td></tr>';
                     $('#tbody').append(html);
                 } else {
                     alert('limite alcançado');
                 }
-
            }
            else
            {
@@ -174,23 +178,34 @@ function mtel(v){
     return v;
 }
 
-$('#cadastro').click( function(e) { e.preventDefault()
-​   $.ajax({
+
+$('#cadastro').click( function(e)
+{
+   e.preventDefault()
+   const csrf = $('meta[name="csrf-token"]').attr('content');
+   phone_number=[];
+   for (i= 0; i < document.getElementsByClassName('phone').length; i++) {
+    $date = document.getElementById('phone_number'+i).value;
+    phone_number.push($date);
+   }
+   console.log(phone_number);
+   $.ajax({
         url: '{{url("cadastro")}}',
         type: 'POST',
         data: {
         'name'         : $('#name').val(),
-        'last_name'    : $('#lastName').val(),
+        'last_name'    : $('#last_name').val(),
         'email'        : $('#email').val(),
         'date_birth'   : $('#date_birth').val(),
-        'zipcode'      : $('#zipCode').val(),
+        'zipcode'      : $('#zipcode').val(),
         'address'      : $('#address').val(),
         'number'       : $('#number').val(),
         'complement'   : $('#complement').val(),
         'neighborhood' : $('#neighborhood').val(),
         'city'         : $('#city').val(),
         'state'        : $('#state').val(),
-        'phone_number' : $('#phone_number').val()
+        'phone_number' : phone_number,
+        '_token': csrf
     },
     dataType: 'json',
     success: function( response ) {
@@ -198,11 +213,7 @@ $('#cadastro').click( function(e) { e.preventDefault()
     error: function( response ) {
             }
         })
-    })
-
-
-
-
+})
 
 </script>
 

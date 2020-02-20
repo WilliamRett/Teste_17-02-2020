@@ -9,11 +9,11 @@ class Address extends Model
     protected $fillable = [
         'zipcode',
         'address',
-        'district',
+        'neighborhood',
         'state',
         'city',
         'complement',
-        'number_address',
+        'number',
         'cadastro_id'
     ];
 }

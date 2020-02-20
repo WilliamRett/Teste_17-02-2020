@@ -3,6 +3,8 @@
 
 @section('content')
 <div class="container">
+    <form action="127.0.0.0 /cadastro" method="POST">
+        <input type = "hidden" name = "_token" value = "<?php echo csrf_token(); ?>">
     <div class="row" >
         <div class="col-8" style="padding: 15px;">
             <div class="row">
@@ -104,6 +106,7 @@
         @csrf
         <button class="btn btn-primary" type="button" id="cadastro" name="cadastro">Cadastro</button>
     </div>
+    </form> {{--form--}}
 </div>   {{--container--}}
 
 @endsection

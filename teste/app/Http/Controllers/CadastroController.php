@@ -46,7 +46,7 @@ class CadastroController extends Controller
             'phone_number'             => 'required|array'  ,
             'zipcode'                  => 'required|string' ,
             'address'                  => 'required|string' ,
-            'district'                 => 'required|string' ,
+            'neighborhood'             => 'required|string' ,
             'state'                    => 'required|string' ,
             'city'                     => 'required|string' ,
             'complement'               => 'nullable|string' ,
@@ -62,7 +62,7 @@ class CadastroController extends Controller
             $phone['cadastro_id'] = $cadastro->id;
             $phoneCount=DB::table('phones')->where('cadastro_id',$cadastro->id)->count();
             if ($phoneCount<=6) {
-               //Phone::create($phone);
+               Phone::create($phone);
             }
 
         }
