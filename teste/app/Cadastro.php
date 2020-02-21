@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cadastro extends Model
 {
     protected $fillable = [
-         'name', 
+         'name',
          'last_name',
          'email',
          'date_birth'
@@ -15,7 +15,7 @@ class Cadastro extends Model
 
     public function address()
     {
-        return $this->belongsTo('App\Address');
+        return $this->hasOne('App\Address');
     }
 
     public function phones()

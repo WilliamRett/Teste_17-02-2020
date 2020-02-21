@@ -1,7 +1,7 @@
 
-@extends('layouts.cadastro')
+@extends('layouts.app')
 @section('content')
-@foreach ($cadastros as $cadastro)
-    {{$cadastro->cadastro}}
+@foreach ($cadastros as $result)
+<p> {{ $result }}</p>
 @endforeach
 @endsection

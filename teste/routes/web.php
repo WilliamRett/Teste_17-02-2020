@@ -15,3 +15,4 @@ Route::get('/ ', function () {return view('welcome');});
 Auth::routes();
 Route::get('/home',function(){return view('home');});
 Route::resource('cadastro', 'CadastroController');
+Route::get('cadastro/view-list','CadastroController@listView');

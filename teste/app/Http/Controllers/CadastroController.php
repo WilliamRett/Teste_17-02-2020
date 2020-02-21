@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cadastro;
 use App\Address;
+use App\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,7 +44,7 @@ class CadastroController extends Controller
             'last_name'                => 'required|string' ,
             'email'                    => 'required|email'  ,
             'date_birth'               => 'required|date'   ,
-            'phone_number'             => 'required|array'  ,
+            'phone_number'             => 'nullable|array'  ,
             'zipcode'                  => 'required|string' ,
             'address'                  => 'required|string' ,
             'neighborhood'             => 'required|string' ,
@@ -56,18 +57,27 @@ class CadastroController extends Controller
         $cadastro->fill($validate);
         $cadastro->save();
         $address = new Address();
-        $address['cadastro_id'] = $cadastro->id;
-        Address::create($address);
-        foreach ($validate['phone'] as $phone) {
-            $phone['cadastro_id'] = $cadastro->id;
+        $address->cadastro_id       = $cadastro->id;
+        $address->zipcode           = $validate['zipcode'];
+        $address->address           = $validate['address'];
+        $address->neighborhood      = $validate['neighborhood'];
+        $address->state             = $validate['state'];
+        $address->city              = $validate['city'];
+        $address->complement        = $validate['complement'];
+        $address->number            = $validate['number'];
+        $address->save();
+        foreach ($validate['phone_number'] as $phone) {
             $phoneCount=DB::table('phones')->where('cadastro_id',$cadastro->id)->count();
             if ($phoneCount<=6) {
-               Phone::create($phone);
+               $phone_number               = new Phone();
+               $phone_number->phone_number = $phone;
+               $phone_number->cadastro_id  = $cadastro->id;
+               $phone_number->save();
             }
 
         }
-
-        return $cadastro->load('Phones')->load('Address');
+        $result = ['message' => 'Cadastro Realizado com sucesso'];
+        return response()->json($result, 200);
     }
 
     /**
@@ -159,4 +169,6 @@ class CadastroController extends Controller
     {
        return $cadastro->delete()->Address()->Phone();
     }
+
+
 }

@@ -108,7 +108,7 @@ $(document).ready(function(){
     {
 
      html = '<tr>';
-     html += '<td><input type="text" class="phone" name="phone_number'+x+'" id="phone_number'+x+'" class="form-control"  onkeyup="mascara( this, mtel );" maxlength="15" /></td>';
+     html += '<td><input type="text" class="phone_number" name="phone_number'+x+'" id="phone_number'+x+'" class="form-control"  onkeyup="mascara( this, mtel );" maxlength="15" /></td>';
      x++;
            if(number > 1)
            {
@@ -184,11 +184,10 @@ $('#cadastro').click( function(e)
    e.preventDefault()
    const csrf = $('meta[name="csrf-token"]').attr('content');
    phone_number=[];
-   for (i= 0; i < document.getElementsByClassName('phone').length; i++) {
-    $date = document.getElementById('phone_number'+i).value;
+   for (i= 0; i < document.getElementsByClassName('phone_number').length; i++) {
+    $date = document.querySelectorAll('.phone_number')[i].value;
     phone_number.push($date);
    }
-   console.log(phone_number);
    $.ajax({
         url: '{{url("cadastro")}}',
         type: 'POST',

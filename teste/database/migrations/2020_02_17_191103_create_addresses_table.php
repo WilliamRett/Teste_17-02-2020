@@ -17,11 +17,11 @@ class CreateAddressesTable extends Migration
             $table->bigIncrements('id');
             $table->string('zipcode');
             $table->string('address');
-            $table->string('district');
+            $table->string('neighborhood');
             $table->string('state');
             $table->string('city');
             $table->string('complement');
-            $table->string('number_address');
+            $table->string('number');
             $table->unsignedBigInteger('cadastro_id')->foreign()->references('id')->on('cadastros');
             $table->timestamps();
         });
