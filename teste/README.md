@@ -5,3 +5,5 @@
 2-> rode o Comando php artisan migrate:fresh --seed,
 
 3-> rode o Comando php artisan serve
+
+4-> faça o cadastro pelo layout do laravel para ter acesso aos cadastros do teste
